@@ -1,11 +1,39 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { exportTravelList, SelectBudgetOptions } from '@/constants/options';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+import { toast } from 'sonner';
 
 function CreateTrip() {
   const [place, setPlace] = useState();
+
+  const [formData, setFromData] = useState([]);
+
+  const handleInputChange = (name, value) => {
+    setFromData({
+      ...formData,
+      [name]: value
+    })
+  }
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData])
+
+  const onGenerateTrip = () => {
+    if (formData.noOfDays > 5 && !formData.Traveler || !formData.Budget || !formData.location) {
+      console.log("Error in adding information");
+      toast("Error in filling information", {
+        style: {
+          backgroundColor: '#ff4d4d',
+          fontWeight: 'bold',
+        }
+      });
+      return
+    }
+    console.log(formData);
+  }
 
   return (
     <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center p-6">
@@ -22,46 +50,50 @@ function CreateTrip() {
               apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
               selectProps={{
                 place,
-                onChange: (v) => { setPlace(v); console.log(v) }
+                onChange: (v) => { setPlace(v), handleInputChange('location', v) }
               }} />
           </div>
 
           <div>
             <h2 className='text-xl my-3 font-medium text-white'>How days are you planning your trip?</h2>
-            <Input placeholder="Ex.3" type="Number" />
+            <Input placeholder="Ex.3" type="Number"
+              onChange={(e) => handleInputChange('noOfDays', e.target.value)} />
           </div>
         </div>
 
-        <div className='mt-10 p-5'> 
-        <h2 className='text-xl my-3 font-medium text-white'>What is your budget?</h2>
-        <p className='text-gray-500'>The budget includes only your activites and dining purpose</p>
-              <div className='grid grid-cols-3 gap-5 mt-6'>
-                {SelectBudgetOptions.map((items,index)=>(
-                  <div key={index} className='text-white cursor-pointer p-4 border text-center rounded-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-sm hover:shadow-purple-200 hover:border-purple-700'>
-                    <h2 className='text-4xl'>{items.icon}</h2>
-                    <h2 className='font-bold text-lg'>{items.title}</h2>
-                    <h2 className='text-gray-400 text-sm'>{items.desc}</h2>
-                  </div>
-                ))}
+        <div className='mt-10 p-5'>
+          <h2 className='text-xl my-3 font-medium text-white'>What is your budget?</h2>
+          <p className='text-gray-500'>The budget includes only your activites and dining purpose</p>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-6 flex-wrap'>
+            {SelectBudgetOptions.map((items, index) => (
+              <div key={index}
+                onClick={() => handleInputChange('Budget', items.title)}
+                className={`text-white  cursor-pointer p-4 border text-center rounded-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-sm hover:shadow-purple-200 hover:border-purple-700 ${formData?.Budget === items.title ? 'border border-purple-900 shadow-md shadow-purple-700' : ''}`}>
+                <h2 className='text-4xl'>{items.icon}</h2>
+                <h2 className='font-bold text-lg'>{items.title}</h2>
+                <h2 className='text-gray-400 text-sm'>{items.desc}</h2>
               </div>
+            ))}
+          </div>
         </div>
 
 
-        <div className='mt-10 p-5'> 
-  <h2 className='text-xl my-3 font-medium text-white'>Who are you travelling with?</h2>
-  <div className='grid grid-cols-3 gap-5 mt-6'>
-    {exportTravelList.map((items, index) => (
-      <div 
-        key={index} 
-        className='text-white  cursor-pointer p-4 border text-center rounded-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-sm hover:shadow-purple-200 hover:border-purple-700'>
-        <h2 className='text-4xl'>{items.icon}</h2>
-        <h2 className='font-bold text-lg'>{items.title}</h2>
-        <h2 className='text-gray-400 text-sm'>{items.desc}</h2>
-      </div>
-    ))}
-  </div>
-  <Button className='p-6 text-md mt-10 bg-black hover:bg-black'>Generate Trip</Button>
-</div>
+        <div className='mt-10 p-5'>
+          <h2 className='text-xl my-3 font-medium text-white'>Who are you travelling with?</h2>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-6 flex-wrap'>
+            {exportTravelList.map((items, index) => (
+              <div
+                key={index}
+                onClick={() => handleInputChange('Traveler', items.people)}
+                className={`text-white  cursor-pointer p-4 border text-center rounded-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-sm hover:shadow-purple-200 hover:border-purple-700 ${formData?.Traveler === items.people ? 'shadow-md border-purple-900  shadow-purple-700' : ''}`}>
+                <h2 className='text-4xl'>{items.icon}</h2>
+                <h2 className='font-bold text-lg'>{items.title}</h2>
+                <h2 className='text-gray-400 text-sm'>{items.desc}</h2>
+              </div>
+            ))}
+          </div>
+          <Button className='p-6 text-md mt-10 bg-black hover:bg-black' onClick={onGenerateTrip}>Generate Trip</Button>
+        </div>
       </div>
     </div>
   )
