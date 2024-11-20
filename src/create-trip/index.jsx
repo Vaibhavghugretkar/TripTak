@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { exportTravelList, SelectBudgetOptions } from '@/constants/options';
+import { AI_PROMPT, exportTravelList, SelectBudgetOptions } from '@/constants/options';
+import { chatSession } from '@/service/AIModal';
 import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
@@ -21,10 +22,10 @@ function CreateTrip() {
     console.log(formData);
   }, [formData])
 
-  const onGenerateTrip = () => {
+  const onGenerateTrip = async () => {
     if (formData.noOfDays > 5 && !formData.Traveler || !formData.Budget || !formData.location) {
       console.log("Error in adding information");
-      toast("Error in filling information", {
+      toast("Please fill all the fields correctly", {
         style: {
           backgroundColor: '#ff4d4d',
           fontWeight: 'bold',
@@ -32,7 +33,17 @@ function CreateTrip() {
       });
       return
     }
-    console.log(formData);
+    
+console.log(formData)
+const FINAL_PROMPT = AI_PROMPT
+.replace('{location}', formData?.location?.label)
+.replace('{totalDays}', formData?.noOfDays)
+.replace('{traveler}', formData?.Traveler)
+.replace('{budget}', formData?.Budget);
+
+    console.log(FINAL_PROMPT);
+    const result = await chatSession.sendMessage(FINAL_PROMPT);
+    console.log(result?.response?.text());
   }
 
   return (
