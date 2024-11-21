@@ -5,10 +5,25 @@ import { chatSession } from '@/service/AIModal';
 import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
+import { FcGoogle } from "react-icons/fc";
+
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { LogIn } from 'lucide-react';
+import { useGoogleLogin } from '@react-oauth/google';
+
+
 
 function CreateTrip() {
   const [place, setPlace] = useState();
-
+  const[dialogBox,setDialogBox]=useState(false);
   const [formData, setFromData] = useState([]);
 
   const handleInputChange = (name, value) => {
@@ -18,11 +33,24 @@ function CreateTrip() {
     })
   }
 
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse)=>console.log(codeResponse),
+    onError: (error)=>console.log(error)
+    
+  })
+
   useEffect(() => {
     console.log(formData);
   }, [formData])
 
   const onGenerateTrip = async () => {
+      const user = localStorage.getItem("user");
+      if(!user){
+        setDialogBox(true);
+        return;
+      }
+
+
     if (formData.noOfDays > 5 && !formData.Traveler || !formData.Budget || !formData.location) {
       console.log("Error in adding information");
       toast("Please fill all the fields correctly", {
@@ -106,6 +134,27 @@ const FINAL_PROMPT = AI_PROMPT
           <Button className='p-6 text-md mt-10 bg-black hover:bg-black' onClick={onGenerateTrip}>Generate Trip</Button>
         </div>
       </div>
+
+      <Dialog open={dialogBox}>
+  <DialogContent>
+    <DialogHeader>
+      <img src='logo3.webp' className='w-14 h-14 rounded-full'></img>
+      
+      <DialogTitle>Sign in with Google</DialogTitle>
+      <DialogDescription className="flex flex-col">
+        Get connected through google securely
+
+        <Button className="mt-5 bg-zinc-900 hover:bg-zinc-950"  onClick={login}> 
+          <FcGoogle/>  Sign in with Google
+          </Button>
+
+      </DialogDescription>
+      </DialogHeader>
+  </DialogContent>
+</Dialog>
+
+
+
     </div>
   )
 }
