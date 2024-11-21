@@ -6,6 +6,9 @@ import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
 import { FcGoogle } from "react-icons/fc";
+import axios from 'axios'
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 
 
 import {
@@ -18,6 +21,9 @@ import {
 } from "@/components/ui/dialog"
 import { LogIn } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/service/firebaseConfig';
+import { setLogLevel } from 'firebase/app';
 
 
 
@@ -25,6 +31,7 @@ function CreateTrip() {
   const [place, setPlace] = useState();
   const[dialogBox,setDialogBox]=useState(false);
   const [formData, setFromData] = useState([]);
+  const [loading, setloading]=useState(false);
 
   const handleInputChange = (name, value) => {
     setFromData({
@@ -34,13 +41,29 @@ function CreateTrip() {
   }
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse)=>console.log(codeResponse),
+    onSuccess: (codeResponse)=> getUserInfo(codeResponse),
     onError: (error)=>console.log(error)
     
   })
 
+  const getUserInfo = (tokenInfo) =>{ 
+    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`, 
+      {
+        headers:{
+          Authorization : `Bearer ${tokenInfo?.access_token}`,
+          Accept : "application/json"
+        }
+      }
+    ) .then((response)=>{
+      console.log(response);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      setDialogBox(false);
+      onGenerateTrip();
+    }) 
+  }
+
   useEffect(() => {
-    console.log(formData);
+    // console.log(formData);
   }, [formData])
 
   const onGenerateTrip = async () => {
@@ -49,7 +72,6 @@ function CreateTrip() {
         setDialogBox(true);
         return;
       }
-
 
     if (formData.noOfDays > 5 && !formData.Traveler || !formData.Budget || !formData.location) {
       console.log("Error in adding information");
@@ -61,18 +83,34 @@ function CreateTrip() {
       });
       return
     }
-    
-console.log(formData)
+    setloading(true);
 const FINAL_PROMPT = AI_PROMPT
+
 .replace('{location}', formData?.location?.label)
 .replace('{totalDays}', formData?.noOfDays)
 .replace('{traveler}', formData?.Traveler)
 .replace('{budget}', formData?.Budget);
 
-    console.log(FINAL_PROMPT);
     const result = await chatSession.sendMessage(FINAL_PROMPT);
     console.log(result?.response?.text());
+    setloading(false);
+    saveAiTrip(result?.response.text());
   }
+
+
+const saveAiTrip =async (TripData) =>{
+  setloading(true);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const docID = Date.now().toString();
+await setDoc(doc(db, "AiTrips", docID), {
+    userSelection:formData,
+    tripData:JSON.parse(TripData),
+    userEmail:user?.email,
+    id:docID
+
+});
+setloading(false);
+}
 
   return (
     <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center p-6">
@@ -131,7 +169,7 @@ const FINAL_PROMPT = AI_PROMPT
               </div>
             ))}
           </div>
-          <Button className='p-6 text-md mt-10 bg-black hover:bg-black' onClick={onGenerateTrip}>Generate Trip</Button>
+          <Button className='p-6 text-md mt-10 bg-black hover:bg-black' onClick={onGenerateTrip} disabled={loading}>{loading?<AiOutlineLoading3Quarters className='animate-spin'/>:"Generate Trip"}</Button>
         </div>
       </div>
 
@@ -144,10 +182,11 @@ const FINAL_PROMPT = AI_PROMPT
       <DialogDescription className="flex flex-col">
         Get connected through google securely
 
-        <Button className="mt-5 bg-zinc-900 hover:bg-zinc-950"  onClick={login}> 
-          <FcGoogle/>  Sign in with Google
+        <Button 
+        className="mt-5 bg-zinc-900 hover:bg-zinc-950"
+          onClick={login}>
+          <FcGoogle/>Sign in with Google
           </Button>
-
       </DialogDescription>
       </DialogHeader>
   </DialogContent>

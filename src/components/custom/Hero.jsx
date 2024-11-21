@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 
 function Hero() {
     return (
