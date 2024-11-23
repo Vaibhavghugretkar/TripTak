@@ -24,6 +24,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig';
 import { setLogLevel } from 'firebase/app';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -32,6 +33,8 @@ function CreateTrip() {
   const[dialogBox,setDialogBox]=useState(false);
   const [formData, setFromData] = useState([]);
   const [loading, setloading]=useState(false);
+
+   const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
     setFromData({
@@ -55,7 +58,7 @@ function CreateTrip() {
         }
       }
     ) .then((response)=>{
-      console.log(response);
+      // console.log(response);
       localStorage.setItem("user", JSON.stringify(response.data));
       setDialogBox(false);
       onGenerateTrip();
@@ -92,7 +95,7 @@ const FINAL_PROMPT = AI_PROMPT
 .replace('{budget}', formData?.Budget);
 
     const result = await chatSession.sendMessage(FINAL_PROMPT);
-    console.log(result?.response?.text());
+    // console.log(result?.response?.text());
     setloading(false);
     saveAiTrip(result?.response.text());
   }
@@ -110,6 +113,7 @@ await setDoc(doc(db, "AiTrips", docID), {
 
 });
 setloading(false);
+navigate("/view-trip/"+docID)
 }
 
   return (
@@ -124,6 +128,7 @@ setloading(false);
           <div>
             <h2 className='text-xl my-3 font-medium text-white'>What is the destination of your choice?</h2>
             <GooglePlacesAutocomplete
+           
               apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
               selectProps={{
                 place,
@@ -133,7 +138,7 @@ setloading(false);
 
           <div>
             <h2 className='text-xl my-3 font-medium text-white'>How days are you planning your trip?</h2>
-            <Input placeholder="Ex.3" type="Number"
+            <Input placeholder="Ex.3" type="Number" 
               onChange={(e) => handleInputChange('noOfDays', e.target.value)} />
           </div>
         </div>
