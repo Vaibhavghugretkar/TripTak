@@ -1,11 +1,15 @@
-import React ,{useEffect} from 'react'
+import React ,{useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner';
 import {doc, getDoc} from 'firebase/firestore'
 import { db } from '@/service/firebaseConfig';
+import InfoSection from '../components/InfoSection';
+import { Hotel } from 'lucide-react';
+import Hotels from '../components/Hotels';
 export default function ViewTrip() {
 
   const {tripId} = useParams();
+  const[trip,setTrip] = useState([]);
   
 
   useEffect(() => {
@@ -22,6 +26,7 @@ export default function ViewTrip() {
     if(docSnap.exists())
     {
       console.log("Document: ", docSnap.data());
+      setTrip(docSnap.data());
     }
     else{
       console.log("No data found");
@@ -30,6 +35,18 @@ export default function ViewTrip() {
   }
 
   return (
-    <div>ViewTrip</div>
+    <div className="bg-[#1E1E1E] min-h-screen p-10 md:px-20 lg:px-44 xl:px-56">
+   
+    {/* Information Section */}
+    <InfoSection  trip={trip} />
+
+    {/* Hotel Information  */}
+    <Hotels trip={trip}/>
+
+    {/* Daily plan  */}
+    
+
+    {/* Footer */}
+    </div>
   )
 }
