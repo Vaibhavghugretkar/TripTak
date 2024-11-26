@@ -30,7 +30,7 @@ export default function InfoSection({trip}) {
   return (
     <>
     <div>
-    <img src={photoUrl} className='h-[340px] w-full object-cover rounded-xl '></img>
+    <img src='/trip1.avif' className='h-[340px] w-full object-cover rounded-xl shadow-md shadow-lg'></img>
     </div>
 
 
