@@ -4,8 +4,9 @@ import { toast } from 'sonner';
 import {doc, getDoc} from 'firebase/firestore'
 import { db } from '@/service/firebaseConfig';
 import InfoSection from '../components/InfoSection';
-import { Hotel } from 'lucide-react';
 import Hotels from '../components/Hotels';
+import PlacesToVisit from '../components/PlacesToVisit';
+import Footer from '../components/Footer';
 export default function ViewTrip() {
 
   const {tripId} = useParams();
@@ -25,7 +26,7 @@ export default function ViewTrip() {
 
     if(docSnap.exists())
     {
-      console.log("Document: ", docSnap.data());
+      // console.log("Document: ", docSnap.data());
       setTrip(docSnap.data());
     }
     else{
@@ -44,9 +45,10 @@ export default function ViewTrip() {
     <Hotels trip={trip}/>
 
     {/* Daily plan  */}
-    
+    <PlacesToVisit trip={trip}/>
 
     {/* Footer */}
+    <Footer/>
     </div>
   )
 }
