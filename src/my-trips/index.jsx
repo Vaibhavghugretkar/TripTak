@@ -38,16 +38,21 @@ export default function Mytrips() {
   };
 
   return (
-    <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center p-6">
+    <div className="bg-[#1E1E1E] min-h-screen p-6">
       <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
         <h2 className='text-5xl font-bold text-white text-center'>My Trips</h2>
 
         <div className='grid grid-cols-2 md:grid-cols-3 gap-5 mt-10'>
-          {userTrip.map((trip, index) => (
+          {userTrip.length>0?userTrip.map((trip, index) => (
             <div key={index}>
-              <USerTripCardItem trip={trip} />
+              <USerTripCardItem trip={trip} key={index}/>
             </div>
-          ))}
+          )):
+          [1,2,3].map((item,index)=>(
+            <div key={index} className='h-52 w-full bg-slate-300 animate-pulse rounded-md'>
+            </div>
+          ))
+        }
         </div>
       </div>
     </div>

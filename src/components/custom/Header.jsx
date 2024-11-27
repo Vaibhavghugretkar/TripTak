@@ -48,6 +48,12 @@ function Header() {
       <div>
         {user ?
           <div className='flex items-center gap-5'>
+           <a href='/create-trip'>
+            <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
+             + Create Trip
+            </Button>
+            </a>
+
             <a href='/my-trips'>
             <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
               My Trips
