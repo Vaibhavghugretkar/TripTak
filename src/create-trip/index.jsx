@@ -19,12 +19,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { LogIn } from 'lucide-react';
+import { Dot, LogIn } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig';
 import { setLogLevel } from 'firebase/app';
 import { useNavigate } from 'react-router-dom';
+
+
 
 
 
@@ -117,7 +119,7 @@ navigate("/view-trip/"+docID)
 }
 
   return (
-    <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center p-6">
+    <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen flex flex-col items-center">
       <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
         <h2 className="text-transparent text-center bg-clip-text bg-gradient-to-r from-purple-600 to-blue-700 text-[52px] font-bold mt-6">
           Let us know your preferences</h2>
@@ -174,10 +176,15 @@ navigate("/view-trip/"+docID)
               </div>
             ))}
           </div>
-          <Button className='p-6 text-md mt-10 bg-black hover:bg-black' onClick={onGenerateTrip} disabled={loading}>{loading?<AiOutlineLoading3Quarters className='animate-spin'/>:"Generate Trip"}</Button>
+          <Button 
+  className={`p-6 text-md mt-10 bg-black hover:bg-black flex items-center justify-center`}
+  onClick={onGenerateTrip} 
+  disabled={loading}
+>
+  {loading ?   <AiOutlineLoading3Quarters className="animate-spin text-white text-2xl" /> : "Generate Trip"}
+</Button>
         </div>
       </div>
-
       <Dialog open={dialogBox}>
   <DialogContent>
     <DialogHeader>
@@ -196,8 +203,6 @@ navigate("/view-trip/"+docID)
       </DialogHeader>
   </DialogContent>
 </Dialog>
-
-
 
     </div>
   )

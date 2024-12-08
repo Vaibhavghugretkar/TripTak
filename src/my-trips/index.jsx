@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from '@/service/firebaseConfig';
 import USerTripCardItem from './Components/USerTripCardItem';
+import App from './Components/App';
 
 export default function Mytrips() {
-  const navigation = useNavigation();  
+  const navigate = useNavigate();
   const [userTrip, setUserTrip] = useState([]);
+  const [loading, setLoading] = useState(true); // Manage loading state
 
   useEffect(() => {
     getUserTrip();
@@ -16,44 +18,54 @@ export default function Mytrips() {
     let user = JSON.parse(localStorage.getItem('user'));
     
     if (!user) {
-      navigation('/');
+      navigate('/');
       return;
     }
 
-    // Reset state to ensure previous trips do not persist
     setUserTrip([]);
+    setLoading(true); // Set loading to true before fetching data
     
     const q = query(collection(db, 'AiTrips'), where('userEmail', '==', user?.email));
     const querySnapshot = await getDocs(q);
     
-    // Use an array to gather the trips data
     const trips = [];
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-      trips.push(doc.data()); // Store each trip in the array
+      trips.push(doc.data());
     });
 
-    // Once all trips are gathered, update the state in one go
     setUserTrip(trips);
+    setLoading(false); // Set loading to false once data is fetched
   };
 
   return (
-    <div className="bg-[#1E1E1E] min-h-screen p-6">
-      <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
-        <h2 className='text-5xl font-bold text-white text-center'>My Trips</h2>
+    <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen items-center">
+      <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5'>
+        <h2 className=' text-6xl p-2 text-transparent font-bold text-center bg-clip-text bg-gradient-to-r from-purple-600 to-blue-700'>My Trips</h2>
 
-        <div className='grid grid-cols-2 md:grid-cols-3 gap-5 mt-10'>
-          {userTrip.length>0?userTrip.map((trip, index) => (
-            <div key={index}>
-              <USerTripCardItem trip={trip} key={index}/>
-            </div>
-          )):
-          [1,2,3].map((item,index)=>(
-            <div key={index} className='h-52 w-full bg-slate-300 animate-pulse rounded-md'>
-            </div>
-          ))
-        }
-        </div>
+        {userTrip.length === 0 && !loading ? (
+          // Render the App component when no trips exist and not loading
+          <div className="flex flex-col items-center mt-20">
+            <p className="text-white text-2xl mb-1">You have no trips yet. Start planning now!</p>
+            <App />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-10">
+            {loading ? (
+              // Show placeholders while loading
+              [...Array(3)].map((_, index) => (
+                <div
+                  key={index}
+                  className="w-64 h-48 bg-gray-700 animate-pulse rounded-lg"
+                ></div>
+              ))
+            ) : (
+              // Render the actual trip cards
+              userTrip.map((trip, index) => (
+                <USerTripCardItem trip={trip} key={index} />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

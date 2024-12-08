@@ -1,11 +1,31 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import App from '@/constants/App';
+import { toast } from 'sonner';
+
 
 
 function Hero() {
     const user = localStorage.getItem("user");
+    const navigate = useNavigate();
+
+    const handleClick=()=>{
+        if(user)
+        {
+            console.log(user);
+            navigate('/create-trip');
+        }
+        else{
+            toast("Please login to start planning your trip", {
+                style: {
+                  backgroundColor: '#ff4d4d',
+                  fontWeight: 'bold',
+                }
+              })
+        }
+    }
     return (
         <div
   className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen flex flex-col items-center">
@@ -14,9 +34,8 @@ function Hero() {
                 Plan Your Trips with TripTak
             </h1>
             <p className='text-2xl mt-4 p-3 text-gray-400 text-center'>A website that is your personalized trip planner and tour guide, Wherever you wanna go !</p>
-            <Link to={'/create-trip'}>
-            <Button className='bg-[black] mt-10 hover:bg-black p-6 text-xl shadow-md'>{user?"Get Started" : "Sign In"}</Button>
-            </Link>
+            <Button className='bg-[black] mt-10 hover:bg-black p-6 text-xl shadow-md'onClick={handleClick}>Generate Trip</Button>
+            <App/>
         </div>
     );
 }

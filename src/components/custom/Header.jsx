@@ -10,10 +10,10 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@radix-ui
 import { DialogHeader } from '../ui/dialog'
 import { FcGoogle } from 'react-icons/fc'
 import axios from 'axios'
+import { useNavigate, Link } from 'react-router-dom'
 
 function Header() {
   const [dialogBox, setDialogBox] = useState(false)
-
   let user = JSON.parse(localStorage.getItem('user'))
   useEffect(() => {
     // console.log(user)
@@ -41,35 +41,40 @@ function Header() {
     })
   }
 
+  //*****Logout functionality******
+  const handleLogout = () => {
+    googleLogout();
+    localStorage.clear();
+    window.location.href = '/';
+  };
+
   return (
   
     <div className='bg-[#1b1b27] p-2 flex justify-between items-center shadow-md'>
       <img src='/logo3.webp' className='ml-4 rounded-full w-16 h-16' alt="Logo" />
       <div>
         {user ?
+          
           <div className='flex items-center gap-5'>
-           <a href='/create-trip'>
+            <a href='/create-trip'>
             <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
              + Create Trip
             </Button>
             </a>
-
+            
             <a href='/my-trips'>
             <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
               My Trips
             </Button>
             </a>
+            
             <Popover>
               <PopoverTrigger className='bg-transparent hover:bg-transparent border-none'>
                 <img src={user.picture} alt='profile' className="h-12 w-12 rounded-full border-none shadow-none" />
               </PopoverTrigger>
               <PopoverContent className="bg-black border-blue-500 text-white w-28 mr-4 text-center font-bold text-lg">
-                <h2 className='cursor-pointer' onClick={() => {
-                  googleLogout()
-                  localStorage.clear()
-                  window.location.reload()
-                }}>
-                  Logout
+                <h2 className='cursor-pointer' onClick={handleLogout}>
+                   Logout
                 </h2>
               </PopoverContent>
             </Popover>
