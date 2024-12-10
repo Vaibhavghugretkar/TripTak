@@ -4,7 +4,7 @@ import PlaceCardItem from './PlaceCardItem';
 export default function PlacesToVisit({ trip }) {
   return (
     <div className="bg-[#1E1E1E] min-h-screen text-white">
-      <h2 className="text-3xl mt-10 font-bold">Places to Visit</h2>
+      <h2 className="text-3xl mt-10 pt-5 font-bold text-center">Places to Visit</h2>
       <div className="mt-5">
         {trip.tripData?.itinerary &&
           Object.entries(trip.tripData.itinerary)

@@ -35,8 +35,9 @@ export default function ViewTrip() {
     }
   }
 
+
   return (
-    <div className="bg-[#1E1E1E] min-h-screen p-10 md:px-20 lg:px-44 xl:px-56">
+    <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen p-5 md:px-20 lg:px-44 xl:px-56">
    
     {/* Information Section */}
     <InfoSection  trip={trip} />

@@ -1,47 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '../ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { googleLogout, useGoogleLogin } from '@react-oauth/google'
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@radix-ui/react-dialog'
-import { DialogHeader } from '../ui/dialog'
-import { FcGoogle } from 'react-icons/fc'
-import axios from 'axios'
-import { useNavigate, Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { DialogHeader } from '../ui/dialog';
+import { FcGoogle } from 'react-icons/fc';
+import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
+import axios from 'axios';
 
 function Header() {
-  const [dialogBox, setDialogBox] = useState(false)
-  let user = JSON.parse(localStorage.getItem('user'))
+  const [dialogBox, setDialogBox] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  let user = JSON.parse(localStorage.getItem('user'));
+
   useEffect(() => {
     // console.log(user)
-  }, [])
+  }, []);
 
-  //******login functionality*******
+  // Login functionality
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => getUserInfo(codeResponse),
-    onError: (error) => console.log(error)
-  })
+    onError: (error) => console.log(error),
+  });
 
-  //*********Get User Information************
+  // Get User Information
   const getUserInfo = (tokenInfo) => {
-    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
-      {
-        headers: {
-          Authorization: `Bearer ${tokenInfo?.access_token}`,
-          Accept: "application/json"
+    axios
+      .get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${tokenInfo?.access_token}`,
+            Accept: 'application/json',
+          },
         }
-      }
-    ).then((response) => {
-      localStorage.setItem("user", JSON.stringify(response.data))
-      setDialogBox(false)
-      window.location.reload()
-    })
-  }
+      )
+      .then((response) => {
+        localStorage.setItem('user', JSON.stringify(response.data));
+        setDialogBox(false);
+        window.location.reload();
+      });
+  };
 
-  //*****Logout functionality******
+  // Logout functionality
   const handleLogout = () => {
     googleLogout();
     localStorage.clear();
@@ -49,59 +50,108 @@ function Header() {
   };
 
   return (
-  
-    <div className='bg-[#1b1b27] p-2 flex justify-between items-center shadow-md'>
-      <img src='/logo3.webp' className='ml-4 rounded-full w-16 h-16' alt="Logo" />
-      <div>
-        {user ?
-          
-          <div className='flex items-center gap-5'>
-            <a href='/create-trip'>
-            <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
-             + Create Trip
-            </Button>
+    <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] w-auto flex justify-between items-center px-4 py-3 md:py-5">
+      {/* Logo */}
+      <a href='/'>
+      <img src="/logo3.webp" className="rounded-full w-10 h-10 md:w-16 md:h-16" alt="Logo" />
+      </a>
+
+      {/* Hamburger menu for small screens */}
+      <div className="md:hidden">
+        <button onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <HiOutlineX size={28} className="text-white" /> : <HiOutlineMenu size={28} className="text-white" />}
+        </button>
+      </div>
+
+      {/* Menu Items for larger screens */}
+      <div className="hidden md:flex items-center gap-5">
+        {user ? (
+          <>
+            <a href="/create-trip">
+              <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
+                + Create Trip
+              </Button>
             </a>
-            
-            <a href='/my-trips'>
-            <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
-              My Trips
-            </Button>
+            <a href="/my-trips">
+              <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
+                My Trips
+              </Button>
             </a>
-            
             <Popover>
               <PopoverTrigger className='bg-transparent hover:bg-transparent border-none'>
-                <img src={user.picture} alt='profile' className="h-12 w-12 rounded-full border-none shadow-none" />
+                <img
+                  src="/profile.webp"
+                  alt="profile"
+                  className="h-12 w-12 rounded-full border-none shadow-none"
+                />
               </PopoverTrigger>
               <PopoverContent className="bg-black border-blue-500 text-white w-28 mr-4 text-center font-bold text-lg">
-                <h2 className='cursor-pointer' onClick={handleLogout}>
-                   Logout
+                <h2 className="cursor-pointer" onClick={handleLogout}>
+                  Logout
                 </h2>
               </PopoverContent>
             </Popover>
-          </div>
-          : <Button className='mr-4 p-5 bg-black hover:bg-black' onClick={() => setDialogBox(true)}>Sign in</Button>
-        }
+          </>
+        ) : (
+          <Button
+            className="rounded-3xl bg-black hover:bg-black p-6 text-lg"
+            onClick={() => setDialogBox(true)}
+          >
+            Sign in
+          </Button>
+        )}
       </div>
 
-      <Dialog open={dialogBox}>
-  <DialogContent className="flex items-center justify-center fixed inset-0 bg-opacity-50 bg-black">
-    <DialogHeader className="bg-white text-black p-6 rounded-lg shadow-lg w-full max-w-sm">
-      <img src='logo3.webp' className='w-14 h-14 rounded-full' alt="Logo" />
-      <DialogTitle className="text-black">Sign in with Google</DialogTitle>
-      <DialogDescription className="flex flex-col text-black">
-        Get connected through Google securely
-        <Button
-          className="mt-5 bg-zinc-900 hover:bg-zinc-950 text-white"
-          onClick={login}>
-          <FcGoogle /> Sign in with Google
-        </Button>
-      </DialogDescription>
-    </DialogHeader>
-  </DialogContent>
-</Dialog>
+      {/* Slide-down menu for small screens with animation */}
+      {menuOpen && (
+        <div className="absolute top-14 left-0 w-full bg-[#1b1b27] border-t border-gray-700 flex flex-col items-center gap-4 py-4 z-50 shadow-lg md:hidden animate-slideDown">
+          {user ? (
+            <>
+              <a href="/create-trip">
+                <Button className=" bg-black hover:bg-black px-4 py-2 text-sm">
+                  + Create Trip
+                </Button>
+              </a>
+              <a href="/my-trips">
+                <Button className=" bg-black hover:bg-black px-4 py-2 text-sm">
+                  My Trips
+                </Button>
+              </a>
+              <Button className="bg-black px-4 py-2 text-sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              className="rounded-3xl bg-black hover:bg-black px-4 py-2 text-sm"
+              onClick={() => setDialogBox(true)}
+            >
+              Sign in
+            </Button>
+          )}
+        </div>
+      )}
 
+      {/* Dialog */}
+      <Dialog open={dialogBox}>
+        <DialogContent className="flex items-center justify-center fixed inset-0 bg-opacity-50 bg-black">
+          <DialogHeader className="bg-white text-black p-6 rounded-lg shadow-lg w-full max-w-sm">
+            <img src="logo3.webp" className="w-14 h-14 rounded-full" alt="Logo" />
+            <DialogTitle className="text-black">Sign in with Google</DialogTitle>
+            <DialogDescription className="flex flex-col text-black">
+              Get connected through Google securely
+              <Button
+                className="mt-5 bg-zinc-900 hover:bg-zinc-950 text-white"
+                onClick={login}
+              >
+                <FcGoogle /> Sign in with Google
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+  );
 }
 
-export default Header
+export default Header;

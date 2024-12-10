@@ -14,7 +14,7 @@ export default function PlaceCardItem({ place }) {
 
   const fetchPlacePhoto = async () => {
     const data = {
-      textQuery: place.PlaceName,
+      textQuery: place.placeName,
     };
     try {
       const response = await getPlaceDetails(data);
@@ -22,37 +22,43 @@ export default function PlaceCardItem({ place }) {
         '{NAME}',
         response.data?.places?.[0]?.photos?.[0]?.name || ''
       );
-      setPhotoUrl(photoUrl);
+      setPhotoUrl(photoUrl || '/placeholder-image.webp');
     } catch (error) {
       console.error('Error fetching place photo:', error);
     }
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
-      <div className="w-3/4">
-        <h4 className="text-xl font-bold">{place.PlaceName}</h4>
-        <p>{place.PlaceDetails}</p>
-        <p className="text-sm text-gray-400">
+    <div className="flex flex-wrap sm:flex-no-wrap justify-between items-center gap-4 p-4 bg-gray-800 rounded-lg shadow-lg">
+      {/* Text Section */}
+      <div className="w-full sm:w-3/4">
+        <h4 className="text-lg sm:text-xl font-bold text-white">
+          {place.placeName}
+        </h4>
+        <p className="text-sm sm:text-base text-gray-300">{place.PlaceDetails}</p>
+        <p className="text-sm text-gray-400 mt-2">
           💵 Ticket Pricing: {place.ticketPricing || 'N/A'}
         </p>
         <p className="text-sm text-gray-400">
           🕙 Time to Travel: {place.timeToTravel || 'N/A'}
         </p>
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.PlaceName)}`}
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.placeName)}`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button className="bg-black hover:bg-black mt-3">
+          <Button className="bg-black hover:bg-black mt-3 flex items-center gap-2">
             <FaMapLocationDot />
+            <span>View on Map</span>
           </Button>
         </a>
       </div>
+
+      {/* Image Section */}
       <img
         src={photoUrl}
-        alt={place.PlaceName}
-        className="w-40 h-40 rounded-md shadow-md"
+        alt="place"
+        className="w-full sm:w-40 h-40 object-cover rounded-md shadow-md"
       />
     </div>
   );
