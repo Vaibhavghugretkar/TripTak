@@ -11,7 +11,7 @@ export default function HotelCardItem({ hotel }) {
 
   const getPlacePhotos = async () => {
     const data = {
-      textQuery: hotel?.hotelName,
+      textQuery: hotel?.HotelName,
     };
     try {
       const result = await getPlaceDetails(data);
@@ -30,9 +30,9 @@ export default function HotelCardItem({ hotel }) {
     <Link
       to={
         'https://www.google.com/maps/search/?api=1&query=' +
-        hotel.hotelName +
+        hotel.HotelName +
         ',' +
-        hotel?.hotelAddress
+        hotel?.HotelAddress
       }
       target="_blank"
     >
@@ -41,18 +41,18 @@ export default function HotelCardItem({ hotel }) {
         <img
           src={photoUrl || '/placeholder-image.webp'} // Fallback image
           className="rounded-t-md h-[120px] sm:h-[150px] w-full object-cover"
-          alt={hotel.hotelName || 'Hotel Image'}
+          alt={hotel.HotelName || 'Hotel Image'}
         />
         <div className="p-4 bg-gray-800 rounded-b-md h-[120px] sm:h-[150px] flex flex-col justify-between">
           <div className="mt-2 space-y-0.5">
             <h2 className="text-gray-400 text-xs sm:text-sm md:text-base truncate leading-tight">
-              🏨 {hotel.hotelName}
+              🏨 {hotel.HotelName}
             </h2>
             <h2 className="text-gray-400 text-xs sm:text-sm md:text-base truncate leading-tight">
               💸 {hotel.price}
             </h2>
             <h2 className="text-gray-400 text-xs sm:text-sm md:text-base truncate leading-tight">
-              📍 {hotel.hotelAddress}
+              📍 {hotel.HotelAddress}
             </h2>
             <h2 className="text-gray-400 text-xs sm:text-sm md:text-base truncate leading-tight">
               ⭐ {hotel.rating}

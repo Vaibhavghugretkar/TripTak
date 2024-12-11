@@ -14,7 +14,7 @@ export default function PlaceCardItem({ place }) {
 
   const fetchPlacePhoto = async () => {
     const data = {
-      textQuery: place.placeName,
+      textQuery: place.PlaceName,
     };
     try {
       const response = await getPlaceDetails(data);
@@ -33,7 +33,7 @@ export default function PlaceCardItem({ place }) {
       {/* Text Section */}
       <div className="w-full sm:w-3/4">
         <h4 className="text-lg sm:text-xl font-bold text-white">
-          {place.placeName}
+          {place.PlaceName}
         </h4>
         <p className="text-sm sm:text-base text-gray-300">{place.PlaceDetails}</p>
         <p className="text-sm text-gray-400 mt-2">
@@ -43,7 +43,7 @@ export default function PlaceCardItem({ place }) {
           🕙 Time to Travel: {place.timeToTravel || 'N/A'}
         </p>
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.placeName)}`}
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.PlaceName)}`}
           target="_blank"
           rel="noopener noreferrer"
         >
