@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@radix-ui
 import { DialogHeader } from '../ui/dialog';
 import { FcGoogle } from 'react-icons/fc';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import axios from 'axios';
 
 function Header() {
@@ -52,9 +53,9 @@ function Header() {
   return (
     <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] w-auto flex justify-between items-center px-4 py-3 md:py-5">
       {/* Logo */}
-      <a href='/'>
-      <img src="/logo3.webp" className="rounded-full w-10 h-10 md:w-16 md:h-16" alt="Logo" />
-      </a>
+      <Link to="/">
+        <img src="/logo3.webp" className="rounded-full w-10 h-10 md:w-16 md:h-16" alt="Logo" />
+      </Link>
 
       {/* Hamburger menu for small screens */}
       <div className="md:hidden">
@@ -67,16 +68,16 @@ function Header() {
       <div className="hidden md:flex items-center gap-5">
         {user ? (
           <>
-            <a href="/create-trip">
+            <Link to="/create-trip">
               <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
                 + Create Trip
               </Button>
-            </a>
-            <a href="/my-trips">
+            </Link>
+            <Link to="/my-trips">
               <Button className="rounded-3xl bg-black hover:bg-black p-6 text-lg">
                 My Trips
               </Button>
-            </a>
+            </Link>
             <Popover>
               <PopoverTrigger className='bg-transparent hover:bg-transparent border-none'>
                 <img
@@ -107,16 +108,16 @@ function Header() {
         <div className="absolute top-14 left-0 w-full bg-[#1b1b27] border-t border-gray-700 flex flex-col items-center gap-4 py-4 z-50 shadow-lg md:hidden animate-slideDown">
           {user ? (
             <>
-              <a href="/create-trip">
+              <Link to="/create-trip">
                 <Button className=" bg-black hover:bg-black px-4 py-2 text-sm">
                   + Create Trip
                 </Button>
-              </a>
-              <a href="/my-trips">
+              </Link>
+              <Link to="/my-trips">
                 <Button className=" bg-black hover:bg-black px-4 py-2 text-sm">
                   My Trips
                 </Button>
-              </a>
+              </Link>
               <Button className="bg-black px-4 py-2 text-sm" onClick={handleLogout}>
                 Logout
               </Button>

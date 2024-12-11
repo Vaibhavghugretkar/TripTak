@@ -5,6 +5,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import App from '@/constants/App';
 import { toast } from 'sonner';
 import Footer from '@/view-trip/components/Footer';
+import Header from './Header';
 
 
 
@@ -30,8 +31,9 @@ function Hero() {
         }
     }
     return (  
+       <>
+       <Header/>
         <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] h-auto md:h-[40 rem] w-auto min-h-screen overflow-hidden flex flex-col items-center">
-
 <h1 className="text-transparent text-center bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-blue-700 
     text-[36px] sm:text-[40px] md:text-[52px] font-bold mt-16 drop-shadow-md">                Plan Your Trips with TripTak
             </h1>
@@ -42,6 +44,7 @@ function Hero() {
             <App/>
             <Footer/>
         </div>
+        </>
     );
 }
 

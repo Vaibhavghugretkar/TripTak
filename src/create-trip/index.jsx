@@ -26,6 +26,7 @@ import { db } from '@/service/firebaseConfig';
 import { setLogLevel } from 'firebase/app';
 import { useNavigate } from 'react-router-dom';
 import Footer from '@/view-trip/components/Footer';
+import Header from '@/components/custom/Header';
 
 
 
@@ -113,6 +114,8 @@ function CreateTrip() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen flex flex-col items-center">
       <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
         <h2 className="text-transparent text-center bg-clip-text bg-gradient-to-r from-purple-600 to-blue-700 text-[36px] sm:text-[52px] font-bold mt-6">
@@ -219,6 +222,7 @@ function CreateTrip() {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 }
 

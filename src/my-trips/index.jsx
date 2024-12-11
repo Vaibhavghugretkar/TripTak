@@ -5,6 +5,7 @@ import { db } from '@/service/firebaseConfig';
 import USerTripCardItem from './Components/USerTripCardItem';
 import App from './Components/App';
 import Footer from '@/view-trip/components/Footer';
+import Header from '@/components/custom/Header';
 
 export default function Mytrips() {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ export default function Mytrips() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen items-center">
       <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5'>
         <h2 className='text-4xl sm:text-5xl md:text-6xl p-2 text-transparent font-bold text-center bg-clip-text bg-gradient-to-r from-purple-600 to-blue-700'>
@@ -71,5 +74,6 @@ export default function Mytrips() {
         )}
       </div>
     </div>
+    </>
   );
 }

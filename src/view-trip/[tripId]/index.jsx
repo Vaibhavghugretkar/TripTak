@@ -7,6 +7,7 @@ import InfoSection from '../components/InfoSection';
 import Hotels from '../components/Hotels';
 import PlacesToVisit from '../components/PlacesToVisit';
 import Footer from '../components/Footer';
+import Header from '@/components/custom/Header';
 export default function ViewTrip() {
 
   const {tripId} = useParams();
@@ -38,7 +39,7 @@ export default function ViewTrip() {
 
   return (
     <div className="bg-gradient-to-t from-[#272735] to-[#1b1b27] min-h-screen p-5 md:px-20 lg:px-44 xl:px-56">
-   
+   <Header/>
     {/* Information Section */}
     <InfoSection  trip={trip} />
 
