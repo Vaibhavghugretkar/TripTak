@@ -148,6 +148,7 @@ function CreateTrip() {
             <Input
               placeholder="Ex.3"
               type="Number"
+              required
               onChange={(e) => handleInputChange('noOfDays', e.target.value)}
             />
           </div>
