@@ -4,12 +4,14 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { Button } from './components/ui/button'
 import Hero from './components/custom/Hero'
+import { Toaster } from 'sonner'
 
 function App() {
  
 
   return (
     <>
+    <Toaster/>
       <Hero/>
     </>
   )
